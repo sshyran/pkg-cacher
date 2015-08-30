@@ -1,13 +1,76 @@
-#!/bin/sh
+#!/bin/bash
+#
+# Generate pkg-cacher reports and run the cleaner script. However, don't
+# cleanup downloaded RPM and deb packages, so they can be downloaded
+# manually through httpd at a later time.
+#
 
 # Only do anything if pkg-cacher is actually installed
 if [ ! -x /usr/share/pkg-cacher/pkg-cacher.pl ]; then
   exit 0
 fi
 
+cache_dir="$( grep ^cache_dir /etc/pkg-cacher/pkg-cacher.conf | cut -d'=' -f2 )"
+logdir="$( grep ^logdir /etc/pkg-cacher/pkg-cacher.conf | cut -d'=' -f2 )"
+
+if [ ! -d "$cache_dir" ] || [ ! -d "$logdir" ]; then
+  log error "'cache_dir' or 'logdir' configuration invalid"
+  exit 1
+fi
+
+# Generic log function
+log() {
+  echo "$( date )|$1 [$$]: $2" >> "$logdir/cleanup.log"
+}
+
 # Run the report generator
+log info "Running pkg-cacher-report.pl"
 /usr/share/pkg-cacher/pkg-cacher-report.pl >/dev/null
+ret=$?
+if [ "$ret" -ne "0" ]; then
+  log error "Running pkg-cacher-report.pl failed (ret=$ret)"
+fi
 
 # Run the cache cleaner
-/usr/share/pkg-cacher/pkg-cacher-cleanup.pl 2>/dev/null
+log info "Running pkg-cacher-cleanup.pl"
 
+size_deleted=0
+pretend_cleanup="$( /usr/share/pkg-cacher/pkg-cacher-cleanup.pl -s 2>&1 )"
+cleanup_ret=$?
+if [ "$cleanup_ret" -ne "0" ]; then
+  log error "${pretend_cleanup}"
+  exit $cleanup_ret
+fi
+IFS=$( echo -en "\n\b" )
+
+for line in ${pretend_cleanup} ; do
+  grep --quiet "^Deleting" <<< "$line" || continue
+
+# $line can be:
+#   'Deleting unreferenced cache file repomd.xml.852b55d6[..]17418839737c87a03f'
+# or
+#   'Deleting private/centos/6/updates/x86_64/repodata/80[..]16ff-primary.sqlite.bz2.complete'
+
+  path=$( sed "s|^Deleting unreferenced cache file |${cache_dir}/cache/|g" <<< "$line" )
+  path=$( sed "s|^Deleting |${cache_dir}/|g" <<< "$path" )
+
+  if [ -f $path ] && [ -z "$( egrep '\.rpm|\.deb' <<< "$path" )" ]; then
+    file_size=$( stat -c %s $path )
+    log info "Deleting ${path##${cache_dir}/}"
+    rm -f "$path"
+    if [ "$?" -eq "0" ]; then
+      size_deleted=$(( $size_deleted + $file_size ))
+    fi
+  fi
+
+done
+
+# the return code is not always indicating an error, so still print an error
+# if we haven't deleted anything
+if [ -n "${pretend_cleanup}" ] && [ "${size_deleted}" -eq "0" ]; then
+  log error "${pretend_cleanup}"
+else
+  log info "Total $(( $size_deleted / 1048576 )) MB cleaned up"
+fi
+
+exit $ret
