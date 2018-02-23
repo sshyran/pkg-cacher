@@ -4,7 +4,7 @@ Packages(\.bz2|\.gz|\.xz)?
 InRelease
 Release(\.gpg)?
 Sources(\.bz2|\.gz|\.xz)?
-Translation(-([[:alpha:]]{2}(_[[:alpha::]]{2})?))?(\.bz2|\.gz|\.xz)?
+Translation(-([[:alpha:]]{2}(_[[:alpha:]]{2})?))?(\.bz2|\.gz|\.xz)?
 TranslationIndex(\.bz2|\.gz|\.xz)?
 Contents-.+\.gz
 \d{4}-\d{2}-\d{2}-\d{4}\.\d+\.gz
