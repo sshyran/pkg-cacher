@@ -36,7 +36,7 @@ files), generate usage reports.
 
 * Install build dependencies:
 ```
-$ sudo apt install make debhelper
+$ sudo apt install make debhelper dh-systemd
 ```
 * Change to the source directory and run the following command to create the
   `pkg-cacher` deb packages:
