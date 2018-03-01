@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/sh
 # postinst script for pkg-cacher
 #
 # see: dh_installdeb(1)
@@ -27,12 +27,16 @@ case "$1" in
     configure)
 
     	test -d /var/cache/pkg-cacher || {
-		mkdir /var/cache/pkg-cacher{,/cache,/headers,/packages,/private,/temp}
+			mkdir /var/cache/pkg-cacher
+			for dir in cache headers packages private temp; do
+				mkdir /var/cache/pkg-cacher/$dir
+			done
 	}
 	chown -R pkg-cacher:pkg-cacher /var/cache/pkg-cacher
     	test -d /var/log/pkg-cacher || {
 		mkdir /var/log/pkg-cacher
-		touch /var/log/pkg-cacher/{access.log,error.log}
+		touch /var/log/pkg-cacher/access.log
+		touch /var/log/pkg-cacher/error.log
 	}
 	chown -R pkg-cacher:pkg-cacher /var/log/pkg-cacher
 	sed -i -e '/^\(user\|group\)=/s/=.*$/=pkg-cacher/' /etc/pkg-cacher/pkg-cacher.conf
