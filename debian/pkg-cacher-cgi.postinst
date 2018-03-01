@@ -26,6 +26,7 @@ set -e
 case "$1" in
 	configure)
 		test -d /var/cache/pkg-cacher || {
+			mkdir /var/cache/pkg-cacher
 			for dir in cache headers packages private temp; do
 				mkdir /var/cache/pkg-cacher/$dir
 			done
