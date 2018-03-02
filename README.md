@@ -1,34 +1,18 @@
 # pkg-cacher - A transparent package cache for Debian, Red Hat, SUSE
 
-Pkg-cacher is a transparent caching server for APT and YUM/DNF repositories.
-In 2008 it was forked from Debian's [apt-cacher](https://tracker.debian.org/pkg/apt-cacher)
-(1.6.4) by Robert Nelson and enhanced to support RPM repositories used in the
-Red Hat and SUSE distribution families.
+Pkg-cacher is a transparent caching server for APT and YUM/DNF repositories. In 2008 it was forked from Debian's [apt-cacher](https://tracker.debian.org/pkg/apt-cacher) (1.6.4) by Robert Nelson and enhanced to support RPM repositories used in the Red Hat and SUSE distribution families.
 
-Since the `pkg-cacher` release [1.1.0](https://github.com/open-sw/pkg-cacher/releases)
-in 2014 its development is stalled but its still fully functional and I added
-some bug fixes and enhancements to maintain compatibility with some recent
-repository archive changes.
+Since the `pkg-cacher` release [1.1.0](https://github.com/open-sw/pkg-cacher/releases) in 2014 its development is stalled but its still fully functional and I added some bug fixes and enhancements to maintain compatibility with some recent repository archive changes.
 
 ## Description
 
-Pkg-cacher performs caching of packages and metadata which have been downloaded
-by local users. It is most useful for local area networks with slow internet
-uplink or many machines running the same distribution and version.
+Pkg-cacher performs caching of packages and metadata which have been downloaded by local users. It is most useful for local area networks with slow internet uplink or many machines running the same distribution and version.
 
-When a package is requested, the cache checks whether it already has the
-requested version, in which case it sends the package to the user immediately.
-If not, it downloads the package while streaming it to the user at the same
-time. A local copy is then kept for use by other users.
+When a package is requested, the cache checks whether it already has the requested version, in which case it sends the package to the user immediately. If not, it downloads the package while streaming it to the user at the same time. A local copy is then kept for use by other users.
 
-Pkg-cacher has been optimized for best utilization of network bandwidth and
-efficiency even on slow low-memory servers. Multiple ways of installation are
-possible: as a stand-alone HTTP proxy, as a daemon executed by inetd or as a
-CGI program. Client machines are configured by changing APT's proxy
-configuration or modification of access URLs in sources.list or .repo files.
+Pkg-cacher has been optimized for best utilization of network bandwidth and efficiency even on slow low-memory servers. Multiple ways of installation are possible: as a stand-alone HTTP proxy, as a daemon executed by inetd or as a CGI program. Client machines are configured by changing APT's proxy configuration or modification of access URLs in sources.list or .repo files.
 
-The package includes utilities to clean the cache (removing obsolete package
-files), generate usage reports.
+The package includes utilities to clean the cache (removing obsolete package files), generate usage reports.
 
 ## Installation
 
