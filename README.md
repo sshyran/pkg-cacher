@@ -18,9 +18,7 @@ The package includes utilities to clean the cache (removing obsolete package fil
 
 ### Docker
 
-To keep your data out of Docker container, we do a volume
-(`/var/pkg-cacher` -> `/var/cache/pkg-cacher`) here, and you can change
-it based on your situation.
+To keep your data out of Docker container, we do a volume (`/var/pkg-cacher` -> `/var/cache/pkg-cacher`) here, and you can change it based on your situation.
 
 ```
 # Pull image from Docker Hub.
@@ -42,8 +40,7 @@ $ docker start pkg-cacher
 ```
 $ sudo apt install make debhelper dh-systemd
 ```
-* Change to the source directory and run the following command to create the
-  `pkg-cacher` deb packages:
+* Change to the source directory and run the following command to create the `pkg-cacher` deb packages:
 ```
 $ make debs
 ```
@@ -63,8 +60,7 @@ _Hint: On CentOS replace the 'dnf' commands with 'yum'._
 $ sudo dnf install make rpm-build
 ```
 
-* Change to the source directory and run the following command to create the
-  `pkg-cacher` RPMs:
+* Change to the source directory and run the following command to create the `pkg-cacher` RPMs:
 ```
 $ make rpms
 ```
