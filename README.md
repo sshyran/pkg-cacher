@@ -30,7 +30,27 @@ configuration or modification of access URLs in sources.list or .repo files.
 The package includes utilities to clean the cache (removing obsolete package
 files), generate usage reports.
 
-## Build
+## Installation
+
+### Docker
+
+To keep your data out of Docker container, we do a volume
+(`/var/pkg-cacher` -> `/var/cache/pkg-cacher`) here, and you can change
+it based on your situation.
+
+```
+# Pull image from Docker Hub.
+$ docker pull linuxmonk/pkg-cacher-docker
+
+# Create local directory for repository cache.
+$ sudo mkdir -p /var/pkg-cacher
+
+# Use `docker run` for the first time.
+$ docker run --name=pkg-cacher -p 80:8080 -v /var/pkg-cacher:/var/cache/pkg-cacher linuxmonk/pkg-cacher-docker
+
+# Use `docker start` if you have stopped it.
+$ docker start pkg-cacher
+```
 
 ### Debian/Ubuntu
 
